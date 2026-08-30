@@ -1,0 +1,8 @@
+basicpitch-env/
+__pycache__/
+*.pyc
+*.mid
+*.mxl
+*.xml
+.DS_Store
+/var/
