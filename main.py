@@ -208,7 +208,7 @@ def extract_properties(score, mp3_path):
 
 def main():
 
-    mp3_path = '/Users/samtaju/Downloads/Für Elise Right Hand Melody.mp3'
+    mp3_path = ''
     output_dir = tempfile.mkdtemp()  #makes a temporary file that is deleted once the /Users/samtaju/Downloads/Soprogram is finished
 
     print("Separating stems...")
