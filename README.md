@@ -33,7 +33,7 @@ python main.py
 - Harmonic overtones are partially filtered but not fully eliminated
 - Triplet detection artifacts are a known basic-pitch limitation
 - Tested on Mac M1 only
-- 
+  
 ## Tools Used
 - [Basic-pitch](https://github.com/spotify/basic-pitch) — Spotify
 - [Demucs](https://github.com/facebookresearch/demucs) — Meta
