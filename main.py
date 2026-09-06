@@ -1,8 +1,8 @@
 #MP3 TO SHEET MUSIC PROJECT
 #Description: This project takes in an MP3 file and then makes sheet music either including vocals or only background music.
 #Name : Sam Taju Ninan
-#Date Created: June 30th
-#Last modified: September 5th
+#Date Created: June 30th 2025
+#Last modified: August 30th 2026
 
 from basic_pitch.inference import predict_and_save #Spotify's ML model for transcribing audio to MIDI
 import demucs.separate #Meta's stem separation model for isolating vocals/instruments
