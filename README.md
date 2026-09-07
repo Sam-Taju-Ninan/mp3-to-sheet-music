@@ -7,9 +7,10 @@ This project converts any MP3 audio file into readable sheet music using machine
 3. Beat quantization snaps note onset times to detected beat positions using librosa
 4. Music21 converts the MIDI into a score with correct clefs and key signatures
 5. MuseScore 4 opens the final sheet music automatically
+6. Gemini LLM will be called upon and will show the problems with the generated sheet music (looks at the MusicXML file, not the actual mp3 or visual score).
 
 #This will be improved upon in the coming versions
-Demucs (Meta) stem seperation is supported for songs with vocals. set `keep_vocals=False` in `main.py` to use the instrumental stem only.
+Demucs (Meta) stem separation is supported for songs with vocals. Set `keep_vocals=False` in `main.py` to use the instrumental stem only.
 
 ## Requirements
 - Python 3.10 (required for basic-pitch compatibility)
@@ -32,7 +33,7 @@ python main.py
 - Works best on slow, monophonic piano recordings
 - Harmonic overtones are partially filtered but not fully eliminated
 - Triplet detection artifacts are a known basic-pitch limitation
-- Tested on Mac M1 only
+- Tested on Mac and Windows, but not Linux
   
 ## Tools Used
 - [Basic-pitch](https://github.com/spotify/basic-pitch) — Spotify
