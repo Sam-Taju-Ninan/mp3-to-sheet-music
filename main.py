@@ -263,6 +263,10 @@ def main():
     output_dir = Path("output")
     output_dir.mkdir(exist_ok=True)
 
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY not found in .env file")
+
     print("\nSeparating stems...")
     clean_audio = separate_stems(mp3_path, output_dir, keep_vocals=False)  # set True for vocals
 
