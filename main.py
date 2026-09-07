@@ -2,7 +2,7 @@
 #Description: This project takes in an MP3 file and then makes sheet music either including vocals or only background music.
 #Name : Sam Taju Ninan
 #Date Created: June 30th 2025
-#Last modified: August 30th 2026
+#Last modified: September 7th 2026
 
 from basic_pitch.inference import predict_and_save #Spotify's ML model for transcribing audio to MIDI
 import demucs.separate #Meta's stem separation model for isolating vocals/instruments
@@ -15,6 +15,9 @@ from pathlib import Path #handles file paths cleanly across operating systems
 import tempfile #creates a temporary working directory that is deleted after the program ends
 import os #used to access /dev/null for suppressing basic-pitch debug output
 import sys #used to redirect stdout to silence basic-pitch debug print statements
+import io
+import glob
+
 
 def separate_stems(mp3_path, output_dir, keep_vocals=True):
     """
@@ -26,7 +29,7 @@ def separate_stems(mp3_path, output_dir, keep_vocals=True):
     :param keep_vocals: If True, it returns the vocal stem (which includes background music). If false, it returns the instrumental only.
     :return: String path to the selected stem MP3 file.
     """
-    demucs.separate.main(["--mp3", "--two-stems", "vocals", "-o", output_dir, mp3_path])
+    demucs.separate.main(["--mp3", "--two-stems", "vocals", "-o", str(output_dir), str(mp3_path)])
     song_name = Path(mp3_path).stem
     #choose stem based on parameter that is there
     if keep_vocals:
@@ -44,6 +47,10 @@ def transcribe_to_midi(audio_path, output_dir):
     :param output_dir: Directory where the MIDI file will be saved
     :return: Path object pointing to the generated MIDI file
     """
+    # Delete existing MIDI if it exists to avoid basic-pitch refusing to overwrite
+    for f in Path(output_dir).glob("*_basic_pitch.mid"):
+        f.unlink()
+
     with open(os.devnull, 'w') as devnull:
         old_stdout = sys.stdout
         sys.stdout = devnull
@@ -173,7 +180,13 @@ def generate_score(midi_path, output_dir):
     score = score.quantize(quarterLengthDivisors=[4])  #4 divisions per quarter note = 16th note grid
     midi_out = Path(output_dir) / "output.mid"
     score.write('midi', fp=str(midi_out))  # export final MIDI
-    subprocess.run(['open', '-a', 'MuseScore 4', str(midi_out)])  # open in MuseScore
+    print(f"Score saved to: {midi_out.resolve()}") #prints directory
+    #open in musescore
+    if sys.platform == 'win32':
+        musescore_path = r"C:\Program Files\MuseScore 4\bin\MuseScore4.exe"
+        subprocess.run([musescore_path, str(midi_out)])
+    else:
+        subprocess.run(['open', '-a', 'MuseScore 4', str(midi_out)])
     return score
 
 def extract_properties(score, mp3_path):
@@ -202,14 +215,15 @@ def extract_properties(score, mp3_path):
     # Detect tempo from the waveform
     tempo, beat_frames = librosa.beat.beat_track(y=y, sr=sr)  #beat_frames
 
-    print(f"Tempo: {round(float(tempo))} BPM")  #tempo is returned as an array, so take first element
+    print(f"Tempo: {round(float(tempo[0] if hasattr(tempo, '__len__') else tempo))} BPM")  #tempo is returned as an array, so take first element
 
     print(f"Duration: {int(duration // 60)}m {int(duration % 60)}s")  # Prints duration
 
 def main():
 
-    mp3_path = 'samples/fur_elise.mp3'
-    output_dir = tempfile.mkdtemp()  #makes a temporary file that is deleted once the /Users/samtaju/Downloads/Soprogram is finished
+    mp3_path = r"C:\Users\ninan\Downloads\fur_elise.mp3"
+    output_dir = Path("output")
+    output_dir.mkdir(exist_ok=True)
 
     print("Separating stems...")
     clean_audio = separate_stems(mp3_path, output_dir, keep_vocals=False)  # set True for vocals
