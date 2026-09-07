@@ -39,5 +39,7 @@ python main.py
 - [Basic-pitch](https://github.com/spotify/basic-pitch) — Spotify
 - [Demucs](https://github.com/facebookresearch/demucs) — Meta
 - [Music21](https://web.mit.edu/music21/) — MIT
+- [pretty_midi](https://craffel.github.io/pretty-midi/)
 - [Librosa](https://librosa.org/)
 - [MuseScore 4](https://musescore.org/)
+- [Gemini](https://aistudio.google.com/) — Google
